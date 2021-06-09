@@ -2,14 +2,22 @@
   "name": "firelogs",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "parcel popup.html --dist-dir ./"
+    "start": "webpack --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "parcel": "^2.0.0-beta.2"
-  }
+    "css-loader": "^5.2.6",
+    "file-loader": "^6.2.0",
+    "jquery": "^3.6.0",
+    "style-loader": "^2.0.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "devDependencies": {}
 }
