@@ -27,9 +27,44 @@
         }
     </style>
 </head>
+<table>
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th> ID</th>
+            <th>Title</th>
+            <th>Body</th>
+        </tr>
 
+    </thead>
+    <tbody>
+    </tbody>
+</table>
 <body>
     <script src="dist/bundle.js"></script>
+    
+    <script>
+        jQuery(document).ready(function () {
+            jQuery.ajax({
+                url: "https://jsonplaceholder.typicode.com/posts",
+                success: function (data) {
+                    var html = "";
+                    jQuery.each(data, function (index, ele) {
+                        html += `
+<tr>
+    <td>${index++}</td>
+    <td>${ele.userId}</td>
+    <td>${ele.id}</td>
+    <td>${ele.title}</td>
+    <td>${ele.body}</td>
+    </tr>
+`;
+                    });
+                    jQuery("table tbody").html(html)
+                }
+            })
+        });
+    </script>
 </body>
 
 </html>
