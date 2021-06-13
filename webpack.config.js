@@ -2,12 +2,17 @@ const path = require("path");
 
 module.exports = {
   mode: process.env.NODE_ENV !== "production" ? "development" : "production",
-  entry: "./src/index.js",
-  output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js"
+
+  entry: {
+    "dist/firelogs": path.resolve(__dirname, "/src/firelogs/index.js"),
+    "dist/firelogs-tabs": path.resolve(__dirname, "/src/tabs/index.js"),
+    "background": path.resolve(__dirname, "/src/extension/index.js"),
   },
-  experiments:{
+  output: {
+    path: path.resolve(__dirname),
+    filename: "[name].js"
+  },
+  experiments: {
     topLevelAwait: true
   },
   module: {

@@ -1,11 +1,4 @@
 /*!
-    localForage -- Offline Storage, Improved
-    Version 1.9.0
-    https://localforage.github.io/localForage
-    (c) 2013-2017 Mozilla, Apache License 2.0
-*/
-
-/*!
  * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *

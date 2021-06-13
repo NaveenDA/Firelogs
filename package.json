@@ -7,12 +7,13 @@
   "scripts": {
     "start": "webpack --watch",
     "serve": "webpack serve",
-    "build": "NODE_ENV=production webpack build"
+    "build": "NODE_ENV=production webpack build && node scripts/build.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fs-extra": "^10.0.0",
     "jquery": "^3.6.0",
     "jqueryui": "^1.11.1",
     "localforage": "^1.9.0",
