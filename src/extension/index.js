@@ -16,6 +16,17 @@ const onCompleted = (details) => {
     RequestLifeCycle.onCompleted(details, id, transmissionPort);
   });
 };
+const onBeforeSendHeaders = (details) => {
+  getActiveTabID((id) => {
+    RequestLifeCycle.onBeforeSendHeaders(details, id, transmissionPort);
+  });
+};
+const onErrorOccurred = (details) => {
+  getActiveTabID((id) => {
+    RequestLifeCycle.onErrorOccurred(details, id, transmissionPort);
+  });
+};
+
 /**
  * A method for get the current Activite tab from chrome storage
  * Memozied method was added, so performance will be better.
@@ -107,6 +118,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               Events.destoryFireLogs(activeTabContext);
               activeTabContext = null;
               chrome.webRequest.onCompleted.removeListener(onCompleted);
+              chrome.webRequest.onBeforeSendHeaders.removeListener(
+                onBeforeSendHeaders
+              );
+              chrome.webRequest.onErrorOccurred.removeListener(onErrorOccurred);
             });
 
             /*
@@ -123,17 +138,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               ["responseHeaders"]
             );
 
+            chrome.webRequest.onBeforeSendHeaders.addListener(
+              onBeforeSendHeaders,
+              { urls: ["<all_urls>"] },
+              ["requestHeaders"]
+            );
+
             /**
              * On Request Error
              */
             chrome.webRequest.onErrorOccurred.addListener(
-              (details) => {
-                RequestLifeCycle.onErrorOccurred(
-                  details,
-                  activeTabId,
-                  transmissionPort
-                );
-              },
+              onErrorOccurred,
               { urls: ["<all_urls>"] },
               ["extraHeaders"]
             );

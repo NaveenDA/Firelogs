@@ -8,6 +8,7 @@
     "storage",
     "tabs",
     "webRequest",
+    "webRequestBlocking",
     "activeTab",
     "http://*/*",
     "https://*/*"

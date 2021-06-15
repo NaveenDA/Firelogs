@@ -54,7 +54,8 @@ class Firelogs {
         .find(".__firelogs-count")
         .hide()
         .text(firelogsCount.count)
-        .show("highlight", {}, 200);
+        .show();
+     
     });
   }
   /**
@@ -94,6 +95,7 @@ class Firelogs {
     });
   }
   bindAddCounterEvent() {
+    let self = this;
     const ele = jQuery("#__firelogs");
     ele
       .find("#add-count")
@@ -108,11 +110,11 @@ class Firelogs {
           ChromeUtils.storage.set(
             {
               firelogsCount: {
-                count: firelogsCount.count+1
+                count: firelogsCount.count + 1
               }
             },
             () => {
-              this.showCount();
+              self.showCount();
             }
           );
         });
