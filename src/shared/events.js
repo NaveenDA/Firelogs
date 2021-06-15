@@ -48,7 +48,7 @@ class Events {
    * A method for increase the count from background script to content scripts
    */
   static addCount() {
-    /** Welcome to Callback Hell👹 */
+    /** Welcome to the Callback Hell👹 */
     ChromeUtils.storage.get("firelogsCount", function ({ firelogsCount }) {
       if (!firelogsCount) {
         firelogsCount = {
@@ -62,7 +62,7 @@ class Events {
           }
         },
         () => {
-          ChromeUtils.log(firelogsCount.count + 1)
+          ChromeUtils.log(firelogsCount.count + 1);
           chrome.tabs.executeScript({
             code: `
               try{

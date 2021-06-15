@@ -1,7 +1,7 @@
 class ChromeUtils {
-    /**
-     * A method is used to Store the Data on Extenision Storage
-     */
+  /**
+   * A method is used to Store the Data on Extenision Storage
+   */
   static storage = chrome.storage.local;
   /**
    * @param  {string} code
@@ -11,7 +11,7 @@ class ChromeUtils {
     chrome.tabs.executeScript({
       code: code
     });
-  }
+  };
   /**
    * A method is used to print log on the browser console from the extension
    * @param {string|object} msg Message need to print
@@ -36,10 +36,6 @@ class ChromeUtils {
       code: "console.count(`" + msg + "`)"
     });
   };
-
-  
 }
 
-
 export default ChromeUtils;
-

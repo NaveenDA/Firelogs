@@ -50,12 +50,7 @@ class Firelogs {
         };
       }
       firelogsGlobalCount = firelogsCount.count;
-      ele
-        .find(".__firelogs-count")
-        .hide()
-        .text(firelogsCount.count)
-        .show();
-     
+      ele.find(".__firelogs-count").hide().text(firelogsCount.count).show();
     });
   }
   /**

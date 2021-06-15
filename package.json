@@ -7,7 +7,9 @@
   "scripts": {
     "start": "webpack --watch",
     "serve": "webpack serve",
-    "build": "NODE_ENV=production webpack build && node scripts/build.js"
+    "build": "NODE_ENV=production webpack build && node scripts/build.js",
+    "format": "prettier  --write 'src/**/*.{js,hbs,scss}'"
+
   },
   "keywords": [],
   "author": "",
@@ -38,7 +40,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "prettier": {
-    "trailingComma": "all"
+    "trailingComma": "none"
   },
   "husky": {
     "hooks": {
