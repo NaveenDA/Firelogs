@@ -14,7 +14,7 @@
     "https://*/*"
   ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["dist/background.js"],
     "persistent": true
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",

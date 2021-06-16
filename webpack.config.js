@@ -6,7 +6,7 @@ module.exports = {
   entry: {
     "dist/firelogs": path.resolve(__dirname, "/src/firelogs/index.js"),
     "dist/firelogs-tabs": path.resolve(__dirname, "/src/tabs/index.js"),
-    "background": path.resolve(__dirname, "/src/extension/index.js"),
+    "dist/background": path.resolve(__dirname, "/src/extension/index.js"),
   },
   output: {
     path: path.resolve(__dirname),
