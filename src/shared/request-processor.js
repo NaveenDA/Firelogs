@@ -21,6 +21,11 @@ class RequestProcessor {
 
     try {
       switch (eventName) {
+        case "beforeRequest":
+        if(details.requestBody && details.requestBody.formData){
+          fullData[details.requestId].input=details.requestBody.formData;
+        }
+        break;
         case "before":
           let url = RequestProcessor.parseUri(details.url);
           fullData[details.requestId].method = details.method;

@@ -62,7 +62,6 @@ class Events {
           }
         },
         () => {
-          ChromeUtils.log(firelogsCount.count + 1);
           chrome.tabs.executeScript({
             code: `
               try{

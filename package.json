@@ -5,6 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "prestart": "node scripts/prestart.js",
     "start": "webpack --watch",
     "serve": "webpack serve",
     "build": "NODE_ENV=production webpack build && node scripts/build.js",

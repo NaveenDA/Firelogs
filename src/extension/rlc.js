@@ -19,6 +19,15 @@ class RequestLifeCycle {
     }
   }
 
+  static async onBeforeRequest(details, activeTabId, transmissionPort){
+    if (
+      details.tabId &&
+      activeTabId == details.tabId &&
+      details.type === "xmlhttprequest"
+    ) {
+      RequestProcessor.process(details, "beforeRequest");
+    }
+  }
   static async processRequest() {}
 
   static async onCompleted(details, activeTabId, transmissionPort) {

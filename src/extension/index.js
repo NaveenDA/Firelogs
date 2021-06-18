@@ -26,6 +26,11 @@ const onErrorOccurred = (details) => {
     RequestLifeCycle.onErrorOccurred(details, id, transmissionPort);
   });
 };
+const onBeforeRequest = (details) => {
+  getActiveTabID((id) => {
+    RequestLifeCycle.onBeforeRequest(details, id, transmissionPort);
+  });
+};
 
 /**
  * A method for get the current Activite tab from chrome storage
@@ -53,10 +58,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (activeTab) {
         if (activeTab.id === currentTab.id) {
           activeTabContext = tab;
-          ChromeUtils.log({ activeTabContext });
           activeTabId = tab.id;
           Events.loadFireLogs(tab.id);
-          ChromeUtils.log({ load: 1 });
         }
       } else {
         /**
@@ -85,7 +88,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
       }
     } else {
       Events.loadFireLogs(tab.id);
-      ChromeUtils.log({ load: 3 });
     }
   });
 });
@@ -141,7 +143,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             chrome.webRequest.onBeforeSendHeaders.addListener(
               onBeforeSendHeaders,
               { urls: ["<all_urls>"] },
-              ["requestHeaders"]
+              ["extraHeaders"]
+            );
+
+            chrome.webRequest.onBeforeRequest.addListener(
+              onBeforeRequest,
+              { urls: ["<all_urls>"] },
+              ["requestBody"]
             );
 
             /**

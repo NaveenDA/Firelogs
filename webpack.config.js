@@ -12,9 +12,6 @@ module.exports = {
     path: path.resolve(__dirname),
     filename: "[name].js"
   },
-  experiments: {
-    topLevelAwait: true
-  },
   module: {
     rules: [
       {
