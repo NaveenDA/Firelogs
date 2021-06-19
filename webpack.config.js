@@ -1,12 +1,13 @@
 const path = require("path");
 
+
 module.exports = {
   mode: process.env.NODE_ENV !== "production" ? "development" : "production",
-
   entry: {
-    "dist/firelogs": path.resolve(__dirname, "/src/firelogs/index.js"),
-    "dist/firelogs-tabs": path.resolve(__dirname, "/src/tabs/index.js"),
-    "dist/background": path.resolve(__dirname, "/src/extension/index.js"),
+    "dist/firelogs": path.resolve(path.join(__dirname, "./src/firelogs/index.js")),
+    "dist/firelogs-tabs": path.resolve(__dirname, "./src/tabs/index.js"),
+    "dist/background": path.resolve(__dirname, "./src/extension/index.js"),
+    "dist/content": path.resolve(__dirname, "./src/response/index.js"),
   },
   output: {
     path: path.resolve(__dirname),
@@ -32,8 +33,10 @@ module.exports = {
           limit: true
         }
       },
-      { test: /\.hbs$/, loader: "handlebars-loader" }
-
+      {
+        test: /\.hbs$/,
+        loader: "handlebars-loader"
+      }
     ]
   }
 };
