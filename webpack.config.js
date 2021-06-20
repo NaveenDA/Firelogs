@@ -6,10 +6,10 @@ module.exports = {
 
     mode: process.env.NODE_ENV !== "production" ? "development" : "production",
     entry: {
-        "dist/firelogs": path.resolve(path.join(__dirname, "./src/firelogs/index.js")),
-        "dist/firelogs-tabs": path.resolve(__dirname, "./src/tabs/index.js"),
-        "dist/background": path.resolve(__dirname, "./src/extension/index.js"),
-        "dist/content": path.resolve(__dirname, "./src/response/index.js"),
+        "dev-extension/dist/firelogs": path.resolve(path.join(__dirname, "./src/firelogs/index.js")),
+        "dev-extension/dist/firelogs-tabs": path.resolve(__dirname, "./src/tabs/index.js"),
+        "dev-extension/dist/background": path.resolve(__dirname, "./src/extension/index.js"),
+        "dev-extension/dist/content": path.resolve(__dirname, "./src/response/index.js"),
     },
     output: {
         path: path.resolve(__dirname),

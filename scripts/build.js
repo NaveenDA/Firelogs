@@ -11,13 +11,9 @@ fs.writeFileSync("./manifest.json", JSON.stringify(manifest, null, 2));
 /**
  * Chrome Buid
  */
-fs.copySync("./dist", "./out/chrome/dist");
-fs.copySync("./manifest.json", "./out/chrome/manifest.json");
-fs.removeSync("./out/chrome/dist/manifest.json");
+fs.copySync("./dev-extension", "./out/chrome/");
 
 /**
  * Firefox Build
  */
-fs.copySync("./dist", "./out/firefox/dist");
-fs.removeSync("./out/firefox/dist/manifest.json");
-fs.copySync("./manifest.json", "./out/firefox/manifest.json");
+fs.copySync("./dev-extension", "./out/firefox/dist");
