@@ -1,7 +1,7 @@
 {
   "name": "Firelogs",
   "description": "A simple extension logs all your API call and provide the data as excel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "manifest_version": 2,
   "permissions": [
     "activeTab",
@@ -14,9 +14,22 @@
     "https://*/*"
   ],
   "background": {
-    "scripts": ["dist/background.js"],
+    "scripts": [
+      "dist/background.js"
+    ],
     "persistent": true
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "dist/content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
   "browser_action": {
     "default_title": "Log your API call",
