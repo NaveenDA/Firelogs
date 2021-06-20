@@ -36,15 +36,14 @@ const onBeforeRequest = (details) => {
  * A method for get the current Activite tab from chrome storage
  * Memozied method was added, so performance will be better.
  */
-let currentTab;
 const getActiveTabID = (callback) => {
-  if (currentTab) {
-    callback(currentTab);
+  if (activeTabId) {
+    callback(activeTabId);
   } else {
     ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
-      currentTab = activeTab.id;
+      activeTabId = activeTab.id;
     });
-    callback(currentTab);
+    callback(activeTabId);
   }
 };
 /**
@@ -52,11 +51,11 @@ const getActiveTabID = (callback) => {
  */
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (changeInfo.status == "complete" && tab.active) {
-    var currentTab = { id: tab.id };
+    activeTabId = { id: tab.id };
 
     ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
       if (activeTab) {
-        if (activeTab.id === currentTab.id) {
+        if (activeTab.id === activeTabId.id) {
           activeTabContext = tab;
           activeTabId = tab.id;
           Events.loadFireLogs(tab.id);
@@ -75,10 +74,13 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
  */
 chrome.browserAction.onClicked.addListener(function (tab) {
   activeTabContext = tab;
-  var currentTab = { id: tab.id };
+  activeTabId = { id: tab.id };
+
+
+
   ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
     if (activeTab) {
-      if (activeTab.id === currentTab.id) {
+      if (activeTab.id === activeTabId.id) {
         /**
          * Destory the Firelogs */
         chrome.tabs.remove(firelogsTab.id);
@@ -94,6 +96,11 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message) {
+    case "response":
+      ChromeUtils.log("We Get Response");
+      ChromeUtils.log({ arg: arguments });
+      sendResponse({ hh: true });
+      break;
     case "open-firelogs-tab:hidden-mode":
     case "open-firelogs-tab":
       if (firelogsTab) {
@@ -167,3 +174,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return true;
   }
 });
+
+chrome.runtime.onMessageExternal.addListener(
+  function(request, sender, sendResponse) {
+    ChromeUtils.log(request);
+    ChromeUtils.log("From Browser!")
+   if(!request.sender){ // Check the URL with a custom function
+      return;
+   }
+    /* do work */
+  }
+);

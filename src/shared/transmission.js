@@ -7,6 +7,7 @@ class Transmission {
    * @param {Function} callback
    */
   static send(message, callback) {
+    
     // ChromeUtils.log("Sending a message ...");
     chrome.runtime.sendMessage(message, (response) => {
       //  Got an asynchronous response with the data from the background

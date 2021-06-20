@@ -5,6 +5,8 @@ import ChromeUtils from "../shared/chrome";
 import "./styles.scss";
 import logo from "../../images/logo.png";
 import Transmission from "../shared/transmission";
+import DataStorage from "../shared/data-store";
+
 let firelogsGlobalCount = 0;
 class Firelogs {
   static version = "1.0.0";
@@ -62,6 +64,7 @@ class Firelogs {
         <div class="__firelogs-container" style="display:none">
           <img src="${logo}" class="__firelogs-logo" alt="Firelogs Logo" id="logo" />
           <span class="__firelogs-count">0</span>
+          <div id="data-container-firelogs"></div>
         </div>
         `;
     const element = document.createElement("div");
@@ -86,7 +89,9 @@ class Firelogs {
   bindFirelogsTabEvent() {
     const ele = jQuery("#__firelogs");
     ele.find(".__firelogs-container").on("click", () => {
-      Transmission.send("open-firelogs-tab");
+      var element = document.querySelector("#data-container-firelogs");
+      console.log(element.innerHTML);
+      //  Transmission.send("open-firelogs-tab");
     });
   }
   bindAddCounterEvent() {
@@ -116,7 +121,7 @@ class Firelogs {
       });
   }
 }
-const firelogs = new Firelogs();
+const _firelogs = new Firelogs();
 
 setTimeout(() => {
   Transmission.send("open-firelogs-tab:hidden-mode");
