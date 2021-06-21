@@ -1,48 +1,47 @@
 import ChromeUtils from "../shared/chrome";
-import uuid from "../shared/uuid";
-import DataStorage from "../shared/data-store";
+import RUID from "../shared/uuid";
 
 ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
-  if (activeTab) {
-    console.log(activeTab);
-    var existCondition = setInterval(function () {
-      if (document.head) {
-        console.log("Exists!");
-        clearInterval(existCondition);
-        console.log("Now load those");
-        interceptData();
-      }
-    }, 100); // check every 100 ms
-  }
+    if (activeTab) {
+        console.log(activeTab);
+        var existCondition = setInterval(function () {
+            if (document.head) {
+                console.log("Exists!");
+                clearInterval(existCondition);
+                console.log("Now load those");
+                interceptData();
+            }
+        }, 100); // check every 100 ms
+    }
 });
 
 function interceptData() {
-  var xhrOverrideScript = document.createElement("script");
-  xhrOverrideScript.type = "text/javascript";
-  let extId = chrome.runtime.id;
-  xhrOverrideScript.innerHTML = `
+    var xhrOverrideScript = document.createElement("script");
+    xhrOverrideScript.type = "text/javascript";
+    let extId = chrome.runtime.id;
+    xhrOverrideScript.innerHTML = `
   window.__firelogsResponse = {};
-  // Get the copy of UUID from the shared folder
-  var uuid = ${uuid};
-  // Get the data storage from the shared folder
-  ${DataStorage};
-  var dataStorage = new DataStorage();
+  ${RUID};
   var fireIndex = 0;
   (function () {
-    console.log("Script was Running");
-    console.log(uuid())
     var XHR = XMLHttpRequest.prototype;
     var send = XHR.send;
     var open = XHR.open;
     XHR.open = function (method, url) {
       this.url = url; // the request url
-      this.uuid = uuid();
+      this.ruid = RUID.reqUUID(url);
+      this.method = method;
       return open.apply(this, arguments);
     };
     XHR.send = function () {
       this.addEventListener("load", function () {
-        __firelogsResponse[fireIndex] = this.response;
-
+        var url = new URL(this.url, location);
+        __firelogsResponse[this.ruid] = {
+            url:url.pathname,
+            method: this.method,
+            ruid:this.ruid,
+            response: this.response
+        };
         var el = document.querySelector("#data-container-firelogs");
         if (el) {
           el.innerHTML = JSON.stringify(__firelogsResponse);
@@ -56,5 +55,5 @@ function interceptData() {
     };
   })();  
       `;
-  document.head.appendChild(xhrOverrideScript);
+    document.head.appendChild(xhrOverrideScript);
 }

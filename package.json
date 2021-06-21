@@ -9,7 +9,7 @@
         "start": "webpack --watch",
         "serve": "webpack serve",
         "build": "cross-env NODE_ENV=production webpack build && node scripts/build.js",
-        "format": "prettier  --write './src/**/*.{js,hbs,scss}'"
+        "format": "prettier  --write \"./src/**/*.{js,hbs,scss}\""
     },
     "keywords": [],
     "author": "",

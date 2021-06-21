@@ -1,4 +1,4 @@
-class DataStorage  {    
+class DataStorage {
     _storage = new WeakMap();
 
     put(element, key, obj) {
@@ -6,14 +6,16 @@ class DataStorage  {
             this._storage.set(element, new Map());
         }
         this._storage.get(element).set(key, obj);
-    };
+    }
 
     get(element, key) {
         return this._storage.get(element).get(key);
     }
 
     has(element, key) {
-        return this._storage.has(element) && this._storage.get(element).has(key);
+        return (
+            this._storage.has(element) && this._storage.get(element).has(key)
+        );
     }
 
     remove(element, key) {
