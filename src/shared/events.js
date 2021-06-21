@@ -15,7 +15,7 @@ class Events {
     /**
      * Load the Scripts from dist
      */
-    chrome.tabs.executeScript(null, { file: "dist/firelogs.js" }, () => {
+    chrome.tabs.executeScript(null, { file: "dist/firelogs-icon.js" }, () => {
       ChromeUtils.log("Script is loaded...");
     });
   }

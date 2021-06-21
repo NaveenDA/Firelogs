@@ -175,13 +175,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-chrome.runtime.onMessageExternal.addListener(
-  function(request, sender, sendResponse) {
-    ChromeUtils.log(request);
-    ChromeUtils.log("From Browser!")
-   if(!request.sender){ // Check the URL with a custom function
-      return;
-   }
-    /* do work */
-  }
-);

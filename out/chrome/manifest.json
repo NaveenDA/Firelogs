@@ -30,6 +30,11 @@
       "run_at": "document_start"
     }
   ],
+  "externally_connectable" : {
+    "ids": ["*"],
+    "matches": [ "https://demo.servicedeskplus.com/*","https://localhost/*" ]
+
+  },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
   "browser_action": {
     "default_title": "Log your API call",
