@@ -2,24 +2,24 @@ import ChromeUtils from "../shared/chrome";
 import RUID from "../shared/uuid";
 
 ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
-    if (activeTab) {
-        console.log(activeTab);
-        var existCondition = setInterval(function () {
-            if (document.head) {
-                console.log("Exists!");
-                clearInterval(existCondition);
-                console.log("Now load those");
-                interceptData();
-            }
-        }, 100); // check every 100 ms
-    }
+  if (activeTab) {
+    console.log(activeTab);
+    var existCondition = setInterval(function () {
+      if (document.head) {
+        console.log("Exists!");
+        clearInterval(existCondition);
+        console.log("Now load those");
+        interceptData();
+      }
+    }, 100); // check every 100 ms
+  }
 });
 
 function interceptData() {
-    var xhrOverrideScript = document.createElement("script");
-    xhrOverrideScript.type = "text/javascript";
-    let extId = chrome.runtime.id;
-    xhrOverrideScript.innerHTML = `
+  var xhrOverrideScript = document.createElement("script");
+  xhrOverrideScript.type = "text/javascript";
+  let extId = chrome.runtime.id;
+  xhrOverrideScript.innerHTML = `
   window.__firelogsResponse = {};
   ${RUID};
   var fireIndex = 0;
@@ -55,5 +55,5 @@ function interceptData() {
     };
   })();  
       `;
-    document.head.appendChild(xhrOverrideScript);
+  document.head.appendChild(xhrOverrideScript);
 }

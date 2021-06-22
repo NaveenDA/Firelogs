@@ -17,6 +17,7 @@
     "dependencies": {
         "jquery": "^3.6.0",
         "jqueryui": "^1.11.1",
+        "json-escaping": "^1.0.1",
         "localforage": "^1.9.0",
         "uuid": "^8.3.2"
     },
