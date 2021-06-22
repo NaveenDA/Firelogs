@@ -9,7 +9,8 @@
     "start": "webpack --watch",
     "serve": "webpack serve",
     "build": "cross-env NODE_ENV=production webpack build && node scripts/build.js",
-    "format": "prettier  --write \"./src/**/*.{js,hbs,scss}\""
+    "format": "prettier  --write \"./src/**/*.{js,hbs,scss}\"",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -44,10 +45,5 @@
   },
   "prettier": {
     "trailingComma": "none"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "echo \"[Husky] pre-commit\""
-    }
   }
 }
