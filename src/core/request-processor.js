@@ -1,7 +1,8 @@
-import ChromeUtils from "../shared/chrome";
-import Storage from "../shared/store";
-import RUID from "../shared/uuid";
 import escape from "json-escaping";
+
+import ChromeUtils from "../shared/chrome";
+import RUID from "../shared/uuid";
+import Storage from "../shared/store";
 let fullData = {};
 
 class RequestProcessor {
@@ -59,12 +60,12 @@ class RequestProcessor {
         if (output) {
           output = escape(output);
           output = JSON.parse(output);
-        }else{
+        } else {
           output = {};
         }
         _fullData[key].output = output;
       }
-      
+
       chrome.tabs.executeScript({
         code: `
           window.localStorage.setItem('firelogs_requests',\`${JSON.stringify(
