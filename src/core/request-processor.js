@@ -1,6 +1,7 @@
 import ChromeUtils from "../shared/chrome";
 import Storage from "../shared/store";
 import RUID from "../shared/uuid";
+import escape from "json-escaping";
 let fullData = {};
 
 class RequestProcessor {
@@ -14,7 +15,7 @@ class RequestProcessor {
         url: "",
         method: "",
         input: {},
-        output: {},
+        output: null,
         statusCode: "",
         type: "",
         urlParams: "",
@@ -50,10 +51,24 @@ class RequestProcessor {
           RequestProcessor.processResponse(details);
           break;
       }
+      var _fullData = JSON.parse(JSON.stringify(fullData));
+      // Here we need to parse the ouput
+      // This is kind of hacky solution,
+      // I can't find any better solution than this
+      for (let [key, { output }] of Object.entries(_fullData)) {
+        if (output) {
+          output = escape(output);
+          output = JSON.parse(output);
+        }else{
+          output = {};
+        }
+        _fullData[key].output = output;
+      }
+      
       chrome.tabs.executeScript({
         code: `
           window.localStorage.setItem('firelogs_requests',\`${JSON.stringify(
-            fullData
+            _fullData
           )}\`);
           `
       });
@@ -75,6 +90,10 @@ class RequestProcessor {
       }
       fullData[key].output = res;
     }
+  }
+
+  static isEmpty(obj) {
+    return Object.keys(obj).length === 0;
   }
 
   static parseUri(url) {
@@ -132,15 +151,16 @@ class RequestProcessor {
    * @returns
    */
   static escape(str) {
+    // return escape(str);
     return str
-      .replace(/\\n/g, "\\n")
-      .replace(/\\'/g, "\\'")
-      .replace(/\\"/g, '\\"')
-      .replace(/\\&/g, "\\&")
-      .replace(/\\r/g, "\\r")
-      .replace(/\\t/g, "\\t")
-      .replace(/\\b/g, "\\b")
-      .replace(/\\f/g, "\\f");
+      .replace(/[\\]/g, "\\\\")
+      .replace(/[\"]/g, '\\"')
+      .replace(/[\/]/g, "\\/")
+      .replace(/[\b]/g, "\\b")
+      .replace(/[\f]/g, "\\f")
+      .replace(/[\n]/g, "\\n")
+      .replace(/[\r]/g, "\\r")
+      .replace(/[\t]/g, "\\t");
   }
 
   static async syncData(data) {}
