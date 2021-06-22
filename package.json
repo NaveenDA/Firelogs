@@ -45,5 +45,16 @@
   },
   "prettier": {
     "trailingComma": "none"
+  },
+  "importSort": {
+    ".js, .jsx, .ts, .tsx": {
+      "style": "renke"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "import-sort --write",
+      "prettier --write"
+    ]
   }
 }
