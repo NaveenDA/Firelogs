@@ -1,11 +1,14 @@
 console.log("FireLogs is running ...");
-import jQuery from "jquery";
-import * as _ from "jqueryui";
-import ChromeUtils from "../shared/chrome";
+
 import "./styles.scss";
-import logo from "../../images/logo.png";
-import Transmission from "../shared/transmission";
+
+import * as _ from "jqueryui";
+import jQuery from "jquery";
+
+import ChromeUtils from "../shared/chrome";
 import DataStorage from "../shared/data-store";
+import Transmission from "../shared/transmission";
+import logo from "../../images/logo.png";
 
 let firelogsGlobalCount = 0;
 class Firelogs {

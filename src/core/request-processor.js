@@ -3,6 +3,7 @@ import escape from "json-escaping";
 import ChromeUtils from "../shared/chrome";
 import RUID from "../shared/uuid";
 import Storage from "../shared/store";
+
 let fullData = {};
 
 class RequestProcessor {

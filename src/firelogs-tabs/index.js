@@ -1,5 +1,6 @@
-import Container from "./hbs/container.hbs";
 import "./firelogs-tabs.scss";
+
+import Container from "./hbs/container.hbs";
 import Storage from "../shared/store";
 
 class FirelogsTabs {
