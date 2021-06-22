@@ -50,10 +50,6 @@ module.exports = {
         options: {
           limit: true
         }
-      },
-      {
-        test: /\.hbs$/,
-        loader: "handlebars-loader"
       }
     ]
   }

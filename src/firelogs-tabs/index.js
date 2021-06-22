@@ -1,6 +1,5 @@
 import "./firelogs-tabs.scss";
 
-import Container from "./hbs/container.hbs";
 import Storage from "../shared/store";
 
 class FirelogsTabs {
@@ -17,7 +16,14 @@ class FirelogsTabs {
    * Like a treditional reactDOM render
    */
   renderContainer() {
-    document.getElementById("root").innerHTML = Container();
+    document.getElementById("root").innerHTML = `<div class="container">
+    <button id="reload">
+      Reload
+    </button>
+    <pre>
+      <code></code>
+    </pre>
+  </div>`;
   }
 
   async getData() {

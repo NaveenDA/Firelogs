@@ -17,19 +17,14 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "jquery": "^3.6.0",
-    "jqueryui": "^1.11.1",
     "json-escaping": "^1.0.1",
-    "localforage": "^1.9.0",
-    "uuid": "^8.3.2"
+    "localforage": "^1.9.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.6",
     "file-loader": "^6.2.0",
     "fs-extra": "^10.0.0",
-    "handlebars": "^4.7.7",
-    "handlebars-loader": "^1.7.1",
     "husky": "^6.0.0",
     "import-sort-cli": "^6.0.0",
     "import-sort-style-renke": "^6.0.0",
@@ -48,7 +43,7 @@
     "trailingComma": "none"
   },
   "importSort": {
-    ".js, .jsx, .ts, .tsx": {
+    ".js,.jsx": {
       "style": "renke"
     }
   },

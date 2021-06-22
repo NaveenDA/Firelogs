@@ -19,7 +19,5 @@ indent_size = 2
 
 
 
-# Matches the exact files either package.json or .travis.yml
-[{package.json}]
-indent_style = space
-indent_size = 2
+[{manifest.json}]
+insert_final_newline = false

@@ -1,5 +1,3 @@
-import ChromeUtils from "./chrome";
-
 class Transmission {
   /**
    * Send a message over through the chrome runtime message channel

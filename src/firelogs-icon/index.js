@@ -1,14 +1,11 @@
-console.log("FireLogs is running ...");
-
 import "./styles.scss";
 
-import * as _ from "jqueryui";
-import jQuery from "jquery";
-
 import ChromeUtils from "../shared/chrome";
-import DataStorage from "../shared/data-store";
 import Transmission from "../shared/transmission";
+import draggable from "../shared/draggable";
 import logo from "../../images/logo.png";
+
+console.log("FireLogs is running ...");
 
 let firelogsGlobalCount = 0;
 class Firelogs {
@@ -25,7 +22,7 @@ class Firelogs {
    * A method for position the UI in last session's position
    */
   showContainer() {
-    let ele = jQuery("#__firelogs");
+    let ele = document.querySelector("#__firelogs");
     ChromeUtils.storage.get(
       "firelogsPosition",
       function ({ firelogsPosition }) {
@@ -34,20 +31,20 @@ class Firelogs {
            * Default Position
            */
           firelogsPosition = {
-            left: 12,
-            top: 12
+            left: "12px",
+            top: "12px"
           };
         }
-        ele.find(".__firelogs-container").css({
-          left: firelogsPosition.left,
-          top: firelogsPosition.top
-        });
-        ele.find(".__firelogs-container").fadeIn("slow");
+        let container = ele.querySelector(".__firelogs-container");
+        container.style.left = firelogsPosition.left;
+        container.style.top = firelogsPosition.top;
+        container.classList.add("show");
+        container.classList.remove("hide");
       }
     );
   }
   showCount() {
-    let ele = jQuery("#__firelogs");
+    let ele = document.querySelector("#__firelogs .__firelogs-count");
     ChromeUtils.storage.get("firelogsCount", function ({ firelogsCount }) {
       if (!firelogsCount) {
         firelogsCount = {
@@ -55,7 +52,9 @@ class Firelogs {
         };
       }
       firelogsGlobalCount = firelogsCount.count;
-      ele.find(".__firelogs-count").hide().text(firelogsCount.count).show();
+      ele.classList.remove("hide");
+      ele.classList.add("show");
+      ele.innerText = firelogsCount.count;
     });
   }
   /**
@@ -64,7 +63,7 @@ class Firelogs {
   injectHtml() {
     const firelogsContainer = `
         <div id="add-count"></div>
-        <div class="__firelogs-container" style="display:none">
+        <div class="__firelogs-container hide" >
           <img src="${logo}" class="__firelogs-logo" alt="Firelogs Logo" id="logo" />
           <span class="__firelogs-count">0</span>
           <pre id="data-container-firelogs"></pre>
@@ -80,47 +79,65 @@ class Firelogs {
    *
    */
   loadDraggableEvents() {
-    const ele = jQuery("#__firelogs");
+    const ele = document.querySelector("#__firelogs .__firelogs-container");
     /** Draggable Events */
-    ele.find(".__firelogs-container").draggable({
-      stop: (event, ui) => {
-        ChromeUtils.storage.set({
-          firelogsPosition: ui.position
-        });
-      }
+    draggable(ele, (position) => {
+      ChromeUtils.storage.set({
+        firelogsPosition: position
+      });
     });
   }
+  /**
+   * A custom hook to trigger the cutom event
+   * @param {HTMLElement} el
+   * @param {String} newEvent
+   * @param {Object} data
+   */
+  trigger(el, newEvent, data = {}) {
+    var event;
+    if (window.CustomEvent && typeof window.CustomEvent === "function") {
+      event = new CustomEvent(newEvent, { detail: data });
+    } else {
+      event = document.createEvent("CustomEvent");
+      event.initCustomEvent(newEvent, true, true, data);
+    }
+
+    el.dispatchEvent(event);
+  }
+
   bindFirelogsTabEvent() {
-    const ele = jQuery("#__firelogs");
-    ele.find(".__firelogs-container").on("click", () => {
-      Transmission.send("fetch-response");
-    });
+    const ele = document.querySelector("#__firelogs .__firelogs-container");
+    ele.addEventListener(
+      "click",
+      () => {
+        Transmission.send("fetch-response");
+      },
+      false
+    );
   }
   bindAddCounterEvent() {
     let self = this;
-    const ele = jQuery("#__firelogs");
-    ele
-      .find("#add-count")
-      .off("click")
-      .on("click", async () => {
-        ChromeUtils.storage.get("firelogsCount", function ({ firelogsCount }) {
-          if (!firelogsCount) {
-            firelogsCount = {
-              count: 0
-            };
-          }
-          ChromeUtils.storage.set(
-            {
-              firelogsCount: {
-                count: firelogsCount.count + 1
-              }
-            },
-            () => {
-              self.showCount();
+    const addCount = () => {
+      ChromeUtils.storage.get("firelogsCount", function ({ firelogsCount }) {
+        if (!firelogsCount) {
+          firelogsCount = {
+            count: 0
+          };
+        }
+        ChromeUtils.storage.set(
+          {
+            firelogsCount: {
+              count: firelogsCount.count + 1
             }
-          );
-        });
+          },
+          () => {
+            self.showCount();
+          }
+        );
       });
+    };
+    const ele = document.querySelector("#__firelogs #add-count");
+    ele.addEventListener("click", addCount);
   }
 }
 const _firelogs = new Firelogs();

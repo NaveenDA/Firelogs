@@ -18,24 +18,25 @@ ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
 function interceptData() {
   var xhrOverrideScript = document.createElement("script");
   xhrOverrideScript.type = "text/javascript";
-  let extId = chrome.runtime.id;
   xhrOverrideScript.innerHTML = `
   window.__firelogsResponse = {};
-  ${RUID};
+  var __firelogs_ruid = ${RUID};
   var fireIndex = 0;
   (function () {
     var XHR = XMLHttpRequest.prototype;
     var send = XHR.send;
     var open = XHR.open;
     XHR.open = function (method, url) {
+      debugger;
       this.url = url; // the request url
-      this.ruid = RUID.reqUUID(url);
+      this.ruid = __firelogs_ruid.reqUUID(url);
       this.method = method;
       return open.apply(this, arguments);
     };
     XHR.send = function () {
       this.addEventListener("load", function () {
         var url = new URL(this.url, location);
+        debugger;
         __firelogsResponse[this.ruid] = {
             url:url.pathname,
             method: this.method,

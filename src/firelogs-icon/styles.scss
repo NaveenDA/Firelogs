@@ -17,7 +17,7 @@
   }
 
   .__firelogs-count {
-    display: none;
+    display: block;
     position: absolute;
     top: 0px;
     left: -9px;
@@ -29,8 +29,21 @@
     border-radius: 50%;
     line-height: 25px;
     color: #fff;
+    &.hide{
+      opacity: 0;
+    }
+    &.show{
+      opacity: 1;
+    }
   }
   #data-container-firelogs {
     display: none !important;
+  }
+
+  &.show {
+    transition: opacity 400ms;
+  }
+  &.hide {
+    opacity: 0;
   }
 }
