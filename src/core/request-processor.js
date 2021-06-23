@@ -17,7 +17,7 @@ class RequestProcessor {
         url: "",
         method: "",
         input: {},
-        output: null,
+        output: {},
         statusCode: "",
         type: "",
         urlParams: "",
@@ -53,24 +53,11 @@ class RequestProcessor {
           RequestProcessor.processResponse(details);
           break;
       }
-      var _fullData = JSON.parse(JSON.stringify(fullData));
-      // Here we need to parse the ouput
-      // This is kind of hacky solution,
-      // I can't find any better solution than this
-      for (let [key, { output }] of Object.entries(_fullData)) {
-        if (output) {
-          output = escape(output);
-          output = JSON.parse(output);
-        } else {
-          output = {};
-        }
-        _fullData[key].output = output;
-      }
 
       chrome.tabs.executeScript({
         code: `
           window.localStorage.setItem('firelogs_requests',\`${JSON.stringify(
-            _fullData
+            fullData
           )}\`);
           `
       });
@@ -176,10 +163,9 @@ class RequestProcessor {
     data[requestID] = requestObject;
     await Storage.set(data);
     ChromeUtils.executeScript(
-      `console.log("Code from request Processor");
+      `
       window.localStorage.setItem('firelogs_requests', ${JSON.stringify(data)})`
     );
-    ChromeUtils.log("Data saved on request: " + requestID);
   }
 
   static async updateData(data) {}

@@ -5,10 +5,10 @@ import Transmission from "../shared/transmission";
 import draggable from "../shared/draggable";
 import logo from "../../images/logo.png";
 
-console.log("FireLogs is running ...");
-
-let firelogsGlobalCount = 0;
-class Firelogs {
+/**
+ * @class FirelogsIcons
+ */
+class FirelogsIcon {
   static version = "1.0.0";
   constructor() {
     this.injectHtml();
@@ -17,6 +17,7 @@ class Firelogs {
     this.loadDraggableEvents();
     this.bindFirelogsTabEvent();
     this.bindAddCounterEvent();
+    this.bindResponseResolver();
   }
   /**
    * A method for position the UI in last session's position
@@ -43,6 +44,9 @@ class Firelogs {
       }
     );
   }
+  /**
+   * Get the count from Store and show the count
+   */
   showCount() {
     let ele = document.querySelector("#__firelogs .__firelogs-count");
     ChromeUtils.storage.get("firelogsCount", function ({ firelogsCount }) {
@@ -51,7 +55,6 @@ class Firelogs {
           count: 0
         };
       }
-      firelogsGlobalCount = firelogsCount.count;
       ele.classList.remove("hide");
       ele.classList.add("show");
       ele.innerText = firelogsCount.count;
@@ -68,7 +71,7 @@ class Firelogs {
           <span class="__firelogs-count">0</span>
           <pre id="data-container-firelogs"></pre>
         </div>
-        <div id="__firelogs-script"></div>
+        <div id="__firelogs-response"></div>
         `;
     const element = document.createElement("div");
     element.id = "__firelogs";
@@ -104,17 +107,22 @@ class Firelogs {
 
     el.dispatchEvent(event);
   }
-
+  /**
+   *
+   */
   bindFirelogsTabEvent() {
     const ele = document.querySelector("#__firelogs .__firelogs-container");
     ele.addEventListener(
       "click",
       () => {
-        Transmission.send("fetch-response");
+        Transmission.send("open-firelogs-tab");
       },
       false
     );
   }
+  /**
+   *
+   */
   bindAddCounterEvent() {
     let self = this;
     const addCount = () => {
@@ -139,8 +147,21 @@ class Firelogs {
     const ele = document.querySelector("#__firelogs #add-count");
     ele.addEventListener("click", addCount);
   }
+
+  bindResponseResolver() {
+    var el = document.querySelector("#data-container-firelogs");
+    MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+    var observer = new MutationObserver(function (mutations, observer) {
+      Transmission.send("fetch-response");
+    });
+    observer.observe(el, {
+      subtree: true,
+      childList: true
+    });
+  }
 }
-const _firelogs = new Firelogs();
+const _firelogs = new FirelogsIcon();
 
 setTimeout(() => {
   Transmission.send("open-firelogs-tab:hidden-mode");
@@ -148,12 +169,7 @@ setTimeout(() => {
 
 // Listen for messages
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-  // If the received message has the expected format...
   if (msg?.cmd === "give-response") {
-    // Call the specified callback, passing
-    // the web-page's DOM content as argument
-    // sendResponse(document.all[0].outerHTML);
-    console.log("Yeah this is from background");
     var element = document.querySelector("#data-container-firelogs");
     var data = element.innerText;
     data = JSON.parse(data);

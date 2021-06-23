@@ -15,5 +15,6 @@ fs.copySync("./dev-extension", "./out/chrome/");
 
 /**
  * Firefox Build
+ * @todo: Need to create firefox compactable build
  */
-fs.copySync("./dev-extension", "./out/firefox/dist");
+fs.copySync("./dev-extension", "./out/firefox/");

@@ -6,6 +6,14 @@ let firelogsTab;
 let transmissionPort;
 let activeTabId;
 let activeTabContext;
+let activeTabIDCache;
+
+const logiy = (msg) => {
+  try {
+    ChromeUtils.log("::::::::::::: LOGIY :::::::::::");
+    ChromeUtils.log(msg);
+  } catch (error) {}
+};
 
 /**
  * Add RLC callback methods easier
@@ -42,14 +50,18 @@ const onRespone = (details) => {
  * Memozied method was added, so performance will be better.
  */
 const getActiveTabID = (callback) => {
-  if (activeTabId) {
-    callback(activeTabId);
-  } else {
+  if (!activeTabIDCache) {
     ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
-      activeTabId = activeTab.id;
+      if (activeTab) {
+        activeTabIDCache = activeTab.id;
+      } else {
+        ChromeUtils.log(
+          "We have doesn't have any active ID still, how get here? "
+        );
+      }
     });
-    callback(activeTabId);
   }
+  callback(activeTabIDCache);
 };
 /**
  * Events for Page Load
@@ -84,14 +96,19 @@ chrome.browserAction.onClicked.addListener(function (tab) {
   ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
     if (activeTab) {
       if (activeTab.id === activeTabId.id) {
-        /**
-         * Destory the Firelogs */
-        chrome.tabs.remove(firelogsTab.id);
+        if (firelogsTab) {
+          /**
+           * Destory the Firelogs */
+          chrome.tabs.remove(firelogsTab.id);
+        } else {
+          // We need to destory the data from storage
+          Events.destoryFireLogs();
+        }
       } else {
-        Events.loadFireLogs(tab.id);
+        Events.loadFireLogs(tab.id, true);
       }
     } else {
-      Events.loadFireLogs(tab.id);
+      Events.loadFireLogs(tab.id, true);
     }
   });
 });
@@ -99,14 +116,19 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message) {
     case "fetch-response":
-      chrome.tabs.sendMessage(
-        activeTabId,
-        { cmd: "give-response" },
-        (respone) => {
-          onRespone(respone);
-        }
-      );
-
+      try {
+        var id = activeTabIDCache;
+        chrome.tabs.sendMessage(
+          id,
+          {
+            cmd: "give-response"
+          },
+          (data) => {
+            onRespone(data);
+            return true;
+          }
+        );
+      } catch (error) {}
       break;
     case "open-firelogs-tab:hidden-mode":
     case "open-firelogs-tab":
@@ -179,6 +201,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           }
         );
       }
+      return true;
     default:
       return true;
   }

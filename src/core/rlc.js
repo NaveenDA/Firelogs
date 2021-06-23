@@ -3,6 +3,12 @@ import Events from "../shared/events";
 import RequestProcessor from "./request-processor";
 
 class RequestLifeCycle {
+  /**
+   *
+   * @param {*} details
+   * @param {*} activeTabId
+   * @param {*} transmissionPort
+   */
   static async onBeforeSendHeaders(details, activeTabId, transmissionPort) {
     if (
       details.tabId &&
@@ -10,15 +16,14 @@ class RequestLifeCycle {
       details.type === "xmlhttprequest"
     ) {
       RequestProcessor.process(details, "before");
-      let code = JSON.stringify(details);
-      // chrome.tabs.executeScript({
-      //   code: `
-      //     window.localStorage.setItem('before_${details.requestId}', \`${code}\`)
-      //   `
-      // });
     }
   }
-
+  /**
+   *
+   * @param {*} details
+   * @param {*} activeTabId
+   * @param {*} transmissionPort
+   */
   static async onBeforeRequest(details, activeTabId, transmissionPort) {
     if (
       details.tabId &&
@@ -28,8 +33,12 @@ class RequestLifeCycle {
       RequestProcessor.process(details, "beforeRequest");
     }
   }
-  static async processRequest() {}
-
+  /**
+   *
+   * @param {*} details
+   * @param {*} activeTabId
+   * @param {*} transmissionPort
+   */
   static async onCompleted(details, activeTabId, transmissionPort) {
     if (
       details.tabId &&
@@ -37,17 +46,16 @@ class RequestLifeCycle {
       details.type === "xmlhttprequest"
     ) {
       RequestProcessor.process(details, "complete");
-
-      let code = JSON.stringify(details);
-      // chrome.tabs.executeScript({
-      //   code: `
-      //     window.localStorage.setItem('complete_${details.requestId}', \`${code}\`)
-      //   `
-      // });
+      ChromeUtils.count("addCount");
       Events.addCount();
     }
   }
-
+  /**
+   *
+   * @param {*} details
+   * @param {*} activeTabId
+   * @param {*} transmissionPort
+   */
   static async onErrorOccurred(details, activeTabId, transmissionPort) {
     if (
       details.tabId &&
@@ -55,30 +63,20 @@ class RequestLifeCycle {
       details.type === "xmlhttprequest"
     ) {
       RequestProcessor.process(details, "error");
-
-      let code = JSON.stringify(details);
-      // chrome.tabs.executeScript({
-      //   code: `
-      //     window.localStorage.setItem('error_${details.requestId}', \`${code}\`)
-      //   `
-      // });
+      ChromeUtils.count("addCount");
       Events.addCount();
     }
   }
-  static destory(tabId) {}
+
+  //  For the response, things got tricky
+  //  It give full data instead single item,
+  //  Need to find item from group and update on the request pool
   /**
-   * For the response, things got tricky
-   * It give full data instead single item,
-   * Need to find item from group and update on the request pool
+   *
+   * @param {*} details
    */
   static onRespone(details) {
     RequestProcessor.process(details, "response");
-
-    // chrome.tabs.executeScript({
-    //   code: `
-    //     window.localStorage.setItem('error_${details.requestId}', \`${code}\`)
-    //   `
-    // });
   }
 }
 
