@@ -18,6 +18,21 @@ class Transmission {
    * Receive a message through the chrome runtime message channel
    */
   static receive() {}
+
+  /**
+   * Post message to tab
+   * @param {Object} port Chrome's Runtime Connection
+   * @param {Object} message Message needs to sent
+   */
+  static postMessage(port, message) {
+    try {
+      return port.postMessage(message);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn(e.message);
+      return e.message;
+    }
+  }
 }
 
 export default Transmission;

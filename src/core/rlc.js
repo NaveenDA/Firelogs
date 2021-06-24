@@ -66,7 +66,6 @@ class RequestLifeCycle {
       details.type === "xmlhttprequest"
     ) {
       RequestProcessor.process(details, "error");
-      ChromeUtils.count("addCount");
       Events.addCount();
     }
   }
@@ -77,9 +76,11 @@ class RequestLifeCycle {
   /**
    *
    * @param {Object} details
+   * @param {Number} tabID
+   * @param {transmissionPort} port for send message to the firelogs tab
    */
-  static onRespone(details) {
-    RequestProcessor.process(details, "response");
+  static onRespone(details, tabID, transmissionPort) {
+    RequestProcessor.process(details, "response", transmissionPort);
   }
 }
 

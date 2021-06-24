@@ -7,6 +7,7 @@ let transmissionPort;
 let activeTabId;
 let activeTabContext;
 let activeTabIDCache;
+const { chrome } = window;
 
 // eslint-disable-next-line no-unused-vars
 const logiy = (msg) => {
@@ -67,7 +68,6 @@ const onRespone = (details) => {
   });
 };
 
-const { chrome } = window;
 /**
  * Events for Page Load
  */
@@ -154,6 +154,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           },
           (tab) => {
             firelogsTab = tab;
+            transmissionPort = chrome.tabs.connect(firelogsTab.id);
             sendResponse(tab);
 
             // On Tab Destroy

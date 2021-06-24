@@ -1,14 +1,17 @@
+/* eslint-disable quotes */
 import ChromeUtils from "../shared/chrome";
 import RUID from "../shared/uuid";
 import Storage from "../shared/store";
+import Transmission from "../shared/transmission";
 
 const fullData = {};
 const { chrome } = window;
 class RequestProcessor {
   /**
-   * @param  {object} details
-   * @param  {string} eventName
+   * @param {object} details Request/Response Object
+   * @param {string} eventName Name of event
    */
+  // eslint-disable-next-line no-unused-vars
   static async process(details, eventName) {
     if (details?.requestId && !fullData[details.requestId]) {
       fullData[details.requestId] = {
@@ -58,15 +61,19 @@ class RequestProcessor {
 
       chrome.tabs.executeScript({
         code: `
-          window.localStorage.setItem('firelogs_requests',\`${JSON.stringify(
-            fullData
-          )}\`);
+          window.localStorage.setItem('firelogs_requests',
+          \`${JSON.stringify(fullData)}\`);
           `
       });
+      if (eventName === "response") {
+        // Create a tranmission
+        const port = chrome.runtime.connect({ name: "firelogs-tab" });
+        Transmission.postMessage(port, { type: "response", details: fullData });
+      }
     } catch (error) {
       chrome.tabs.executeScript({
         code: `
-          console.error(\`${JSON.stringify(error)}\`)
+          console.error(\`${error.message}\`)
         `
       });
     }
@@ -79,7 +86,6 @@ class RequestProcessor {
       let res = {};
       if (response[ruid]) {
         res = response[ruid].response;
-        res = RequestProcessor.escape(res);
       }
       fullData[key].output = res;
     }

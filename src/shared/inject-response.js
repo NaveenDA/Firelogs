@@ -35,4 +35,5 @@ export const injectResponseScript = (RUID) => `
         });
         return send.apply(this, arguments);
       };
-    })(); `;
+    })();
+`;
