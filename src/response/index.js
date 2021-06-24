@@ -2,9 +2,20 @@ import ChromeUtils from "../shared/chrome";
 import RUID from "../shared/uuid";
 import { injectResponseScript } from "../shared/inject-response";
 
-ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
+/**
+ * Inject the script for log the response
+ */
+const interceptXHR = () => {
+  const xhrOverrideScript = document.createElement("script");
+  xhrOverrideScript.type = "text/javascript";
+  xhrOverrideScript.id = "__firelogs_xhr_override_script";
+  xhrOverrideScript.innerHTML = injectResponseScript(RUID);
+  document.head.appendChild(xhrOverrideScript);
+};
+
+ChromeUtils.storage.get("activeTab", ({ activeTab }) => {
   if (activeTab) {
-    var existCondition = setInterval(function () {
+    const existCondition = setInterval(() => {
       if (document.head) {
         clearInterval(existCondition);
         interceptXHR();
@@ -12,13 +23,3 @@ ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
     }, 100); // check every 100 ms
   }
 });
-/**
- * Inject the script for log the response
- */
-export function interceptXHR() {
-  var xhrOverrideScript = document.createElement("script");
-  xhrOverrideScript.type = "text/javascript";
-  xhrOverrideScript.id = "__firelogs_xhr_override_script";
-  xhrOverrideScript.innerHTML = injectResponseScript(RUID);
-  document.head.appendChild(xhrOverrideScript);
-}

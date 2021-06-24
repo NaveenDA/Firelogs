@@ -1,11 +1,9 @@
-import escape from "json-escaping";
-
 import ChromeUtils from "../shared/chrome";
 import RUID from "../shared/uuid";
 import Storage from "../shared/store";
 
-let fullData = {};
-
+const fullData = {};
+const { chrome } = window;
 class RequestProcessor {
   /**
    * @param  {object} details
@@ -27,6 +25,8 @@ class RequestProcessor {
     }
 
     try {
+      let url;
+      let reqId;
       switch (eventName) {
         case "beforeRequest":
           if (details.requestBody && details.requestBody.formData) {
@@ -35,8 +35,8 @@ class RequestProcessor {
           }
           break;
         case "before":
-          let url = RequestProcessor.parseUri(details.url);
-          var reqId = details.requestId;
+          url = RequestProcessor.parseUri(details.url);
+          reqId = details.requestId;
           fullData[reqId].method = details.method;
           fullData[reqId].type = details.type;
           fullData[reqId].urlParams = url.queryKey || null;
@@ -52,6 +52,8 @@ class RequestProcessor {
         case "response":
           RequestProcessor.processResponse(details);
           break;
+        default:
+        // Do nothing
       }
 
       chrome.tabs.executeScript({
@@ -69,10 +71,12 @@ class RequestProcessor {
       });
     }
   }
+
   static processResponse(response) {
-    for (let [key, value] of Object.entries(fullData)) {
-      var ruid = value["ruid"];
-      var res = {};
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key, value] of Object.entries(fullData)) {
+      const { ruid } = value;
+      let res = {};
       if (response[ruid]) {
         res = response[ruid].response;
         res = RequestProcessor.escape(res);
@@ -90,7 +94,7 @@ class RequestProcessor {
      * Based on the parseUri
      * @link https://blog.stevenlevithan.com/archives/parseuri
      */
-    let options = {
+    const options = {
       strictMode: false,
       key: [
         "source",
@@ -120,20 +124,22 @@ class RequestProcessor {
       }
     };
 
-    let regexGroup =
+    const regexGroup =
       options.parser[options.strictMode ? "strict" : "loose"].exec(url);
-    let uri = {};
+    const uri = {};
     let index = 14;
 
+    // eslint-disable-next-line no-plusplus
     while (index--) uri[options.key[index]] = regexGroup[index] || "";
 
     uri[options.q.name] = {};
-    uri[options.key[12]].replace(options.q.parser, function ($0, $1, $2) {
+    uri[options.key[12]].replace(options.q.parser, ($0, $1, $2) => {
       if ($1) uri[options.q.name][$1] = $2;
     });
 
     return uri;
   }
+
   /**
    * Escape the JSON string, if the json contains new line it will break the data
    * @param {String} str
@@ -152,14 +158,23 @@ class RequestProcessor {
       .replace(/[\t]/g, "\\t");
   }
 
-  static async syncData(data) {}
+  /**
+   * Sent the data to the another tab
+   * @param {*} data
+   */
+  static async syncData(data) {
+    // No Nothing
+    // eslint-disable-next-line no-console
+    console.log(data);
+  }
+
   /**
    * @param  {string} requestID
    * @param  {any} requestObject
    * @param  {null} viod
    */
   static async saveData(requestID, requestObject) {
-    let data = (await Storage.get("firelogs_requests")) || {};
+    const data = (await Storage.get("firelogs_requests")) || {};
     data[requestID] = requestObject;
     await Storage.set(data);
     ChromeUtils.executeScript(
@@ -167,8 +182,6 @@ class RequestProcessor {
       window.localStorage.setItem('firelogs_requests', ${JSON.stringify(data)})`
     );
   }
-
-  static async updateData(data) {}
 }
 
 export default RequestProcessor;

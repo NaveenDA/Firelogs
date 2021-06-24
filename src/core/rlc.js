@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import ChromeUtils from "../shared/chrome";
 import Events from "../shared/events";
 import RequestProcessor from "./request-processor";
@@ -7,59 +8,61 @@ class RequestLifeCycle {
    *
    * @param {*} details
    * @param {*} activeTabId
-   * @param {*} transmissionPort
+   * @param {*} _transmissionPort
    */
-  static async onBeforeSendHeaders(details, activeTabId, transmissionPort) {
+  static async onBeforeSendHeaders(details, activeTabId, _transmissionPort) {
     if (
       details.tabId &&
-      activeTabId == details.tabId &&
+      activeTabId === details.tabId &&
       details.type === "xmlhttprequest"
     ) {
       RequestProcessor.process(details, "before");
     }
   }
+
   /**
    *
    * @param {*} details
    * @param {*} activeTabId
-   * @param {*} transmissionPort
+   * @param {*} _transmissionPort
    */
-  static async onBeforeRequest(details, activeTabId, transmissionPort) {
+  static async onBeforeRequest(details, activeTabId, _transmissionPort) {
     if (
       details.tabId &&
-      activeTabId == details.tabId &&
+      activeTabId === details.tabId &&
       details.type === "xmlhttprequest"
     ) {
       RequestProcessor.process(details, "beforeRequest");
     }
   }
+
   /**
    *
    * @param {*} details
    * @param {*} activeTabId
-   * @param {*} transmissionPort
+   * @param {*} _transmissionPort
    */
-  static async onCompleted(details, activeTabId, transmissionPort) {
+  static async onCompleted(details, activeTabId, _transmissionPort) {
     if (
       details.tabId &&
-      activeTabId == details.tabId &&
+      activeTabId === details.tabId &&
       details.type === "xmlhttprequest"
     ) {
       RequestProcessor.process(details, "complete");
-      ChromeUtils.count("addCount");
       Events.addCount();
     }
   }
+
   /**
    *
-   * @param {*} details
-   * @param {*} activeTabId
-   * @param {*} transmissionPort
+   * @param {Object} details Error Response
+   * @param {Number} activeTabId Current Active Tab
+   * @param {Port} _transmissionPort Chrome Port
    */
-  static async onErrorOccurred(details, activeTabId, transmissionPort) {
+  static async onErrorOccurred(details, activeTabId, _transmissionPort) {
     if (
       details.tabId &&
-      activeTabId == details.tabId &&
+      activeTabId === details.tabId &&
       details.type === "xmlhttprequest"
     ) {
       RequestProcessor.process(details, "error");
@@ -73,7 +76,7 @@ class RequestLifeCycle {
   //  Need to find item from group and update on the request pool
   /**
    *
-   * @param {*} details
+   * @param {Object} details
    */
   static onRespone(details) {
     RequestProcessor.process(details, "response");

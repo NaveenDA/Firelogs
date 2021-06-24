@@ -1,9 +1,9 @@
+/* eslint-disable import/prefer-default-export */
 /**
  * Inject the script for get the reponse of every xhr request
  * @param {RUID} RUID
  */
-export const injectResponseScript = (RUID) => {
-  return `
+export const injectResponseScript = (RUID) => `
     (function () {
       var __firelogsResponse = {};
       var __firelogs_ruid = ${RUID};
@@ -36,4 +36,3 @@ export const injectResponseScript = (RUID) => {
         return send.apply(this, arguments);
       };
     })(); `;
-};

@@ -1,3 +1,4 @@
+const { chrome } = window;
 class Transmission {
   /**
    * Send a message over through the chrome runtime message channel
@@ -7,7 +8,9 @@ class Transmission {
   static send(message, callback) {
     chrome.runtime.sendMessage(message, (response) => {
       //  Got an asynchronous response with the data from the background
-      callback && callback(response);
+      if (typeof callback === "function") {
+        callback(response);
+      }
     });
   }
 

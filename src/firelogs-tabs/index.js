@@ -11,10 +11,12 @@ class FirelogsTabs {
       this.getData();
     });
   }
+
   /**
    * A method was used to create the container and append it to the root.
    * Like a treditional reactDOM render
    */
+  // eslint-disable-next-line class-methods-use-this
   renderContainer() {
     document.getElementById("root").innerHTML = `<div class="container">
     <button id="reload">
@@ -26,12 +28,14 @@ class FirelogsTabs {
   </div>`;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async getData() {
-    let data = (await Storage.get("firelogs_requests")) || {};
+    const data = (await Storage.get("firelogs_requests")) || {};
     document.querySelector("pre code").innerHTML = JSON.stringify(data);
-    data["kl"] = { id: "Naveen" };
+    data.kl = { id: "Naveen" };
     await Storage.set("firelogs_requests", data);
   }
 }
 
-let fireLogsTab = new FirelogsTabs();
+// eslint-disable-next-line no-unused-vars
+const fireLogsTab = new FirelogsTabs();

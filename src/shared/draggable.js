@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * A simple method is used make Element draggable
  * @param {HTMLElement} element
@@ -7,21 +8,10 @@
  * @returns {number} position.top - The y coordinate
  */
 const draggable = (element, onDrop) => {
-  var pos1 = 0;
-  var pos2 = 0;
-  var pos3 = 0;
-  var pos4 = 0;
-
-  const dragMouseDown = (e) => {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closedraggable;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  };
+  let pos1 = 0;
+  let pos2 = 0;
+  let pos3 = 0;
+  let pos4 = 0;
 
   const elementDrag = (e) => {
     e = e || window.event;
@@ -32,8 +22,8 @@ const draggable = (element, onDrop) => {
     pos3 = e.clientX;
     pos4 = e.clientY;
     // set the element's new position:
-    element.style.top = element.offsetTop - pos2 + "px";
-    element.style.left = element.offsetLeft - pos1 + "px";
+    element.style.top = `${element.offsetTop - pos2}px`;
+    element.style.left = `${element.offsetLeft - pos1}px`;
   };
 
   const closedraggable = () => {
@@ -46,6 +36,19 @@ const draggable = (element, onDrop) => {
       top: element.style.top
     });
   };
+
+  const dragMouseDown = (e) => {
+    // eslint-disable-next-line no-param-reassign
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closedraggable;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  };
+
   element.onmousedown = dragMouseDown;
 };
 

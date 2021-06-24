@@ -8,11 +8,33 @@ let activeTabId;
 let activeTabContext;
 let activeTabIDCache;
 
+// eslint-disable-next-line no-unused-vars
 const logiy = (msg) => {
   try {
     ChromeUtils.log("::::::::::::: LOGIY :::::::::::");
     ChromeUtils.log(msg);
-  } catch (error) {}
+  } catch (error) {
+    // Do nothing
+  }
+};
+
+/**
+ * A method for get the current Activite tab from chrome storage
+ * Memozied method was added, so performance will be better.
+ */
+const getActiveTabID = (callback) => {
+  if (!activeTabIDCache) {
+    ChromeUtils.storage.get("activeTab", ({ activeTab }) => {
+      if (activeTab) {
+        activeTabIDCache = activeTab.id;
+      } else {
+        ChromeUtils.log(
+          "We have doesn't have any active ID still, how get here? "
+        );
+      }
+    });
+  }
+  callback(activeTabIDCache);
 };
 
 /**
@@ -45,32 +67,15 @@ const onRespone = (details) => {
   });
 };
 
-/**
- * A method for get the current Activite tab from chrome storage
- * Memozied method was added, so performance will be better.
- */
-const getActiveTabID = (callback) => {
-  if (!activeTabIDCache) {
-    ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
-      if (activeTab) {
-        activeTabIDCache = activeTab.id;
-      } else {
-        ChromeUtils.log(
-          "We have doesn't have any active ID still, how get here? "
-        );
-      }
-    });
-  }
-  callback(activeTabIDCache);
-};
+const { chrome } = window;
 /**
  * Events for Page Load
  */
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  if (changeInfo.status == "complete" && tab.active) {
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete" && tab.active) {
     activeTabId = { id: tab.id };
 
-    ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
+    ChromeUtils.storage.get("activeTab", ({ activeTab }) => {
       if (activeTab) {
         if (activeTab.id === activeTabId.id) {
           activeTabContext = tab;
@@ -89,11 +94,11 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 /**
  * Events for User Click
  */
-chrome.browserAction.onClicked.addListener(function (tab) {
+chrome.browserAction.onClicked.addListener((tab) => {
   activeTabContext = tab;
   activeTabId = { id: tab.id };
 
-  ChromeUtils.storage.get("activeTab", function ({ activeTab }) {
+  ChromeUtils.storage.get("activeTab", ({ activeTab }) => {
     if (activeTab) {
       if (activeTab.id === activeTabId.id) {
         if (firelogsTab) {
@@ -113,11 +118,12 @@ chrome.browserAction.onClicked.addListener(function (tab) {
   });
 });
 
+// eslint-disable-next-line consistent-return
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message) {
     case "fetch-response":
       try {
-        var id = activeTabIDCache;
+        const id = activeTabIDCache;
         chrome.tabs.sendMessage(
           id,
           {
@@ -128,7 +134,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             return true;
           }
         );
-      } catch (error) {}
+      } catch (error) {
+        // Do nothing
+      }
       break;
     case "open-firelogs-tab:hidden-mode":
     case "open-firelogs-tab":
@@ -144,7 +152,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           {
             url: chrome.extension.getURL("dist/firelogs.html")
           },
-          function (tab) {
+          (tab) => {
             firelogsTab = tab;
             sendResponse(tab);
 

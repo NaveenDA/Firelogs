@@ -9,6 +9,7 @@ import logo from "../../images/logo.png";
  * @class FirelogsIcons
  */
 class FirelogsIcon {
+  // eslint-disable-next-line
   static version = "1.0.0";
   constructor() {
     this.injectHtml();
