@@ -6,6 +6,7 @@ import Transmission from "../shared/transmission";
 
 const fullData = {};
 const { chrome } = window;
+
 class RequestProcessor {
   /**
    * @param {object} details Request/Response Object

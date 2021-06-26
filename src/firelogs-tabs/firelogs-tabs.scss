@@ -3,6 +3,20 @@
   margin: 0;
 }
 body {
-  background: #161616;
-  color: #fff;
+  background: #1c2938;
+  color: rgb(221, 221, 221);
+  table {
+    tr {
+      background: #253649;
+      td {
+        &:first-child{
+          width: 50px;
+        }
+        pre {
+          width: 500px;
+          overflow: hidden;
+        }
+      }
+    }
+  }
 }

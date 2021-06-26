@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable class-methods-use-this */
 import "./styles.scss";
 
 import ChromeUtils from "../shared/chrome";
@@ -5,12 +7,12 @@ import Transmission from "../shared/transmission";
 import draggable from "../shared/draggable";
 import logo from "../../images/logo.png";
 
+const { chrome } = window;
 /**
  * @class FirelogsIcons
  */
 class FirelogsIcon {
   // eslint-disable-next-line
-  static version = "1.0.0";
   constructor() {
     this.injectHtml();
     this.showContainer();
@@ -20,37 +22,36 @@ class FirelogsIcon {
     this.bindAddCounterEvent();
     this.bindResponseResolver();
   }
+
   /**
    * A method for position the UI in last session's position
    */
   showContainer() {
-    let ele = document.querySelector("#__firelogs");
-    ChromeUtils.storage.get(
-      "firelogsPosition",
-      function ({ firelogsPosition }) {
-        if (!firelogsPosition) {
-          /**
-           * Default Position
-           */
-          firelogsPosition = {
-            left: "12px",
-            top: "12px"
-          };
-        }
-        let container = ele.querySelector(".__firelogs-container");
-        container.style.left = firelogsPosition.left;
-        container.style.top = firelogsPosition.top;
-        container.classList.add("show");
-        container.classList.remove("hide");
+    const ele = document.querySelector("#__firelogs");
+    ChromeUtils.storage.get("firelogsPosition", ({ firelogsPosition }) => {
+      if (!firelogsPosition) {
+        /**
+         * Default Position
+         */
+        firelogsPosition = {
+          left: "12px",
+          top: "12px"
+        };
       }
-    );
+      const container = ele.querySelector(".__firelogs-container");
+      container.style.left = firelogsPosition.left;
+      container.style.top = firelogsPosition.top;
+      container.classList.add("show");
+      container.classList.remove("hide");
+    });
   }
+
   /**
    * Get the count from Store and show the count
    */
   showCount() {
-    let ele = document.querySelector("#__firelogs .__firelogs-count");
-    ChromeUtils.storage.get("firelogsCount", function ({ firelogsCount }) {
+    const ele = document.querySelector("#__firelogs .__firelogs-count");
+    ChromeUtils.storage.get("firelogsCount", ({ firelogsCount }) => {
       if (!firelogsCount) {
         firelogsCount = {
           count: 0
@@ -61,6 +62,7 @@ class FirelogsIcon {
       ele.innerText = firelogsCount.count;
     });
   }
+
   /**
    * A method for inject the HTML in the document
    */
@@ -79,6 +81,7 @@ class FirelogsIcon {
     document.body.appendChild(element);
     document.getElementById("__firelogs").innerHTML = firelogsContainer;
   }
+
   /**
    *
    */
@@ -91,6 +94,7 @@ class FirelogsIcon {
       });
     });
   }
+
   /**
    * A custom hook to trigger the cutom event
    * @param {HTMLElement} el
@@ -98,7 +102,7 @@ class FirelogsIcon {
    * @param {Object} data
    */
   trigger(el, newEvent, data = {}) {
-    var event;
+    let event;
     if (window.CustomEvent && typeof window.CustomEvent === "function") {
       event = new CustomEvent(newEvent, { detail: data });
     } else {
@@ -108,6 +112,7 @@ class FirelogsIcon {
 
     el.dispatchEvent(event);
   }
+
   /**
    *
    */
@@ -121,14 +126,16 @@ class FirelogsIcon {
       false
     );
   }
+
   /**
    *
    */
   bindAddCounterEvent() {
-    let self = this;
+    const self = this;
     const addCount = () => {
-      ChromeUtils.storage.get("firelogsCount", function ({ firelogsCount }) {
+      ChromeUtils.storage.get("firelogsCount", ({ firelogsCount }) => {
         if (!firelogsCount) {
+          // eslint-disable-next-line no-param-reassign
           firelogsCount = {
             count: 0
           };
@@ -150,10 +157,12 @@ class FirelogsIcon {
   }
 
   bindResponseResolver() {
-    var el = document.querySelector("#data-container-firelogs");
-    MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-
-    var observer = new MutationObserver(function (mutations, observer) {
+    const el = document.querySelector("#data-container-firelogs");
+    const MutationObserver =
+      window.MutationObserver || window.WebKitMutationObserver;
+    const observer = new MutationObserver(() => {
+      // eslint-disable-next-line no-console
+      console.log("fetch-response");
       Transmission.send("fetch-response");
     });
     observer.observe(el, {
@@ -162,17 +171,23 @@ class FirelogsIcon {
     });
   }
 }
-const _firelogs = new FirelogsIcon();
+/**
+ * Create a instance of FirelogsIcon
+ */
+// eslint-disable-next-line no-unused-vars
+const firelogIconInstance = new FirelogsIcon();
 
 setTimeout(() => {
   Transmission.send("open-firelogs-tab:hidden-mode");
 }, 0);
 
 // Listen for messages
-chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  // eslint-disable-next-line no-console
+  console.log({ msg });
   if (msg?.cmd === "give-response") {
-    var element = document.querySelector("#data-container-firelogs");
-    var data = element.innerText;
+    const element = document.querySelector("#data-container-firelogs");
+    let data = element.innerText;
     data = JSON.parse(data);
     sendResponse(data);
   }

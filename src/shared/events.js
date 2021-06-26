@@ -1,6 +1,6 @@
 import ChromeUtils from "./chrome";
 import RUID from "./uuid";
-import { injectResponseScript } from "./inject-response";
+import { logiy } from "../core";
 
 /**
  * @class Events
@@ -33,22 +33,31 @@ class Events {
     /**
      * Remove the Firelogs
      */
-    ChromeUtils.storage.remove("activeTab");
-    ChromeUtils.storage.remove("firelogsCount");
-    /**
-     * Remove the element from the  build
-     */
-    if (activeTabContext) {
-      chrome.tabs.update(activeTabContext.id, { selected: true });
-      chrome.windows.update(activeTabContext.windowId, { focused: true });
-    }
-
-    chrome.tabs.executeScript({
-      code: `
-      try{
-        document.querySelector('#__firelogs').remove();
-      }catch(e){}
-      `
+    ChromeUtils.storage.remove("activeTab", () => {
+      logiy({ msg: "Active Tab Destoryed" });
+      ChromeUtils.storage.remove("firelogsCount", () => {
+        logiy({ msg: "Firelogs count destoryed" });
+        /**
+         * Remove the element from the  build
+         */
+        if (activeTabContext) {
+          logiy({
+            mdg: "Switch to active tab"
+          });
+          chrome.tabs.update(activeTabContext.id, { selected: true });
+          chrome.windows.update(activeTabContext.windowId, { focused: true });
+        }
+        logiy({
+          msg: "Icon was removed"
+        });
+        chrome.tabs.executeScript({
+          code: `
+            try{
+              document.querySelector('#__firelogs').remove();
+            }catch(e){}
+            `
+        });
+      });
     });
   }
   /**

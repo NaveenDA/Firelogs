@@ -9,8 +9,8 @@ let activeTabContext;
 let activeTabIDCache;
 const { chrome } = window;
 
-// eslint-disable-next-line no-unused-vars
-const logiy = (msg) => {
+// eslint-disable-next-line import/prefer-default-export
+export const logiy = (msg) => {
   try {
     ChromeUtils.log("::::::::::::: LOGIY :::::::::::");
     ChromeUtils.log(msg);
@@ -162,8 +162,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               firelogsTab = null;
               transmissionPort = null;
               activeTabId = null;
-
-              ChromeUtils.storage.remove("firelogsCount");
               Events.destoryFireLogs(activeTabContext);
               activeTabContext = null;
               chrome.webRequest.onCompleted.removeListener(onCompleted);
