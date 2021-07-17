@@ -15,6 +15,7 @@
     "quotes": ["error", "double"],
     "comma-dangle": "off",
     "no-useless-escape": "off",
-    "operator-linebreak": "off"
+    "operator-linebreak": "off",
+    "linebreak-style": "off"
   }
 }
