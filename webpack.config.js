@@ -1,4 +1,5 @@
 const path = require("path");
+// eslint-disable-next-line import/no-extraneous-dependencies
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
@@ -9,7 +10,7 @@ module.exports = {
     ),
     "dev-extension/dist/firelogs-tabs": path.resolve(
       __dirname,
-      "./src/firelogs-tabs/index.js"
+      "./src/firelogs-tabs/index.jsx"
     ),
     "dev-extension/dist/background": path.resolve(
       __dirname,
@@ -49,6 +50,14 @@ module.exports = {
         loader: "url-loader",
         options: {
           limit: true
+        }
+      },
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        loader: "babel-loader",
+        options: {
+          presets: ["@babel/preset-env", "@babel/preset-react"]
         }
       }
     ]

@@ -11,17 +11,23 @@
     "build": "cross-env NODE_ENV=production webpack build && node scripts/build.js",
     "format": "prettier  --write \"./src/**/*.{js,scss}\"",
     "prepare": "husky install",
-    "sort": "import-sort --write ./src/**/*.js",
-    "lint": "eslint --fix --ext .js ./src"
+    "sort": "import-sort --write ./src/**/*.js"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "faker": "^5.5.3",
+    "js-beautify": "^1.14.0",
     "json-escaping": "^1.0.1",
     "localforage": "^1.9.0",
+    "rc-select": "^13.0.0-alpha.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-ace": "^9.4.1",
+    "react-dom": "^17.0.2",
+    "react-switch": "^6.0.0",
+    "react-table": "^7.7.0",
+    "styled-components": "^5.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
@@ -30,9 +36,6 @@
     "babel-loader": "^8.2.2",
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.6",
-    "eslint": "^7.29.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.23.4",
     "file-loader": "^6.2.0",
     "fs-extra": "^10.0.0",
     "husky": "^6.0.0",

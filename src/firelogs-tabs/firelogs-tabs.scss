@@ -1,22 +1,25 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 body {
-  background: #1c2938;
-  color: rgb(221, 221, 221);
-  table {
-    tr {
-      background: #253649;
-      td {
-        &:first-child{
-          width: 50px;
-        }
-        pre {
-          width: 500px;
-          overflow: hidden;
-        }
-      }
-    }
+  background: #0052d4;
+  background: -webkit-linear-gradient(to top, #6fb1fc, #4364f7, #0052d4);
+  background: linear-gradient(to top, #6fb1fc, #4364f7, #0052d4);
+  font-size: 1rem;
+  height: 100vh;
+  overflow: hidden;
+  width: 100vw;
+  font-family: "Lato", sans-serif;
+}
+
+.select{
+  width: 200px;
+  padding: 0.5rem;
+
+  option{
+    padding: 0.5rem;
   }
 }
+
